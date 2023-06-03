@@ -1,4 +1,4 @@
-from flask import Flask, request, Blueprint, render_template
+from flask import Flask, request, Blueprint, render_template, request, jsonify, abort
 import etcd3
 import json
 import time
@@ -10,28 +10,21 @@ customer_blueprint = Blueprint('customer', __name__, template_folder='templates'
 @customer_blueprint.route('/', methods=['GET'])
 def route():
     return "Customer"
-
-@customer_blueprint.route('/test', methods=['GET'])
-def test():
-    etcd_client.put('bar', 'doot')
-    result = etcd_client.get('bar')
-    
-    if result is not None:
-        value = result[0]
-        return value.decode()  # Convert the value to a string
-        
-    return "Value not found"
+    # return render_template("customer.html", emp=emp)
 
 @customer_blueprint.route('/orders', methods=['POST'])
 def create_order():
-    table_number = request.form.get('table_number')
+    data = request.get_json()  # Get the JSON data from the request
+
+    # Extract the required fields from the JSON data
+    table_number = data.get('table_number')
+    foods = data.get('foods')
+
+    if not table_number or not foods:
+        abort(400, "Invalid request data. Missing table_number or foods.")
+        
     status = "pending"  # Set initial status as "pending"
-
-    # Generate a unique order_id (you can use any preferred method for this)
-    order_id = generate_order_id()
-
-    # Get the list of foods from the request form
-    foods = request.form.getlist('foods')
+    order_id = generate_order_id()  # Generate a unique order_id
 
     key = f"/orders/{order_id}"
     value = {
@@ -46,14 +39,15 @@ def create_order():
     # Store the order data in etcd
     etcd_client.put(key, value_json)
 
-    return f"Order created with ID: {order_id}"
+    return jsonify({'message': f'Order created with ID: {order_id}'}), 200
+    # return render_template("createOrder.html", ...)
 
 @customer_blueprint.route('/orders/<int:order_id>', methods=['GET'])
 def get_order(order_id):
     key = f"/orders/{order_id}"
     order_data = etcd_client.get(key)
     
-    if order_data is not None:
+    if order_data is not None and order_data[0] is not None:
         value_json = order_data[0]
         value = json.loads(value_json)
         order = {
@@ -62,16 +56,17 @@ def get_order(order_id):
             'status': value.get('status'),
             'foods': value.get('foods')
         }
-        return json.dumps(order)
+        return jsonify(order), 200
+        # return render_template("getOrder.html", ...)
     else:
-        return f"Order with ID {order_id} not found"
+        abort(404, f'Order with ID {order_id} not found')
 
 @customer_blueprint.route('/orders/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     key = f"/orders/{order_id}"
     order_data = etcd_client.get(key)
     
-    if order_data is not None:
+    if order_data is not None and order_data[0] is not None:
         value_json = order_data[0]
         value = json.loads(value_json)
         status = value.get('status')
@@ -79,11 +74,12 @@ def delete_order(order_id):
         if status == "pending":
             # Delete the order if it's in a deletable state
             etcd_client.delete(key)
-            return f"Order with ID {order_id} deleted"
+            return jsonify({'message': f"Order with ID {order_id} deleted"}), 400
+            # return render_template("deleteOrder.html", ...)
         else:
-            return f"Order with ID {order_id} cannot be deleted. Status: {status}"
+            abort(400, f"Order with ID {order_id} cannot be deleted. Status: {status}")
     else:
-        return f"Order with ID {order_id} not found"
+        abort(404, f"Order with ID {order_id} not found")
 
 def generate_order_id():
     timestamp = int(time.time() * 1000)  # Multiply by 1000 to get milliseconds
