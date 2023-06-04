@@ -1,9 +1,10 @@
-from flask import Flask, request, Blueprint, render_template, request, jsonify, abort
+from flask import request, Blueprint, render_template, request, jsonify, abort
 import etcd3
 import json
 import time
 
 etcd_client = etcd3.client(host='localhost', port=2379)
+#etcd_client = etcd3.client(host='192.168.40.150', port=2379)
 
 customer_blueprint = Blueprint('customer', __name__, template_folder='templates')
 
@@ -11,7 +12,7 @@ customer_blueprint = Blueprint('customer', __name__, template_folder='templates'
 def route():
     return "Customer"
     # return render_template("customer.html", emp=emp)
-
+    
 @customer_blueprint.route('/orders', methods=['POST'])
 def create_order():
     data = request.get_json()  # Get the JSON data from the request
@@ -22,15 +23,32 @@ def create_order():
 
     if not table_number or not foods:
         abort(400, "Invalid request data. Missing table_number or foods.")
-        
+
     status = "pending"  # Set initial status as "pending"
     order_id = generate_order_id()  # Generate a unique order_id
 
     key = f"/orders/{order_id}"
+    order_items = {}
+
+    for food in foods:
+        food_name = food.get('name')
+        food_price = food.get('price')
+        food_quantity = food.get('quantity')
+
+        if food_name not in order_items:
+            order_items[food_name] = {
+                'price': food_price,
+                'quantity': food_quantity,
+                'total_price': food_price * food_quantity
+            }
+        else:
+            order_items[food_name]['quantity'] += food_quantity
+            order_items[food_name]['total_price'] += food_price * food_quantity
+
     value = {
         'table_number': table_number,
         'status': status,
-        'foods': foods
+        'order_items': order_items
     }
 
     # Convert the value dictionary to a JSON string
@@ -40,21 +58,27 @@ def create_order():
     etcd_client.put(key, value_json)
 
     return jsonify({'message': f'Order created with ID: {order_id}'}), 200
-    # return render_template("createOrder.html", ...)
+
 
 @customer_blueprint.route('/orders/<int:order_id>', methods=['GET'])
 def get_order(order_id):
     key = f"/orders/{order_id}"
     order_data = etcd_client.get(key)
-    
+
     if order_data is not None and order_data[0] is not None:
         value_json = order_data[0]
         value = json.loads(value_json)
+        order_items = value.get('order_items')
+
+        # Calculate the total price of the order
+        total_price_all_foods = sum(item['total_price'] for item in order_items.values())
+
         order = {
             'order_id': order_id,
             'table_number': value.get('table_number'),
             'status': value.get('status'),
-            'foods': value.get('foods')
+            'order_items': order_items,
+            'total_price_all_foods': total_price_all_foods
         }
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
