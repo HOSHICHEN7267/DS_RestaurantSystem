@@ -66,6 +66,7 @@ def create_order():
 
     return jsonify({'message': f'Order created with ID: {order_id}'}), 200
 
+
 @customer_blueprint.route('/orders/<int:order_id>', methods=['GET'])
 def get_order(order_id):
     key = f"/orders/{order_id}"
@@ -75,6 +76,7 @@ def get_order(order_id):
         value_json = order_data[0]
         value = json.loads(value_json)
         order_items = value.get('order_items')
+        status = value.get('status')
 
         # Calculate the total price of the order
         total_price_all_foods = sum(item['total_price'] for item in order_items.values())
@@ -82,17 +84,40 @@ def get_order(order_id):
         order = {
             'order_id': order_id,
             'table_number': value.get('table_number'),
-            'status': value.get('status'),
+            'status': status,
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
-        
-        # Emit a socket event to send the order details to the frontend
+
+        # Emit a socket event to send the initial order details to the frontend
         socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/customer')
 
-        #return jsonify(order), 200
+        if status != 'done':
+            while True:
+                # Sleep for a specified interval (e.g., 5 seconds) before checking the order status again
+                time.sleep(5)
+
+                # Retrieve the latest order data
+                order_data = etcd_client.get(key)
+
+                if order_data is not None and order_data[0] is not None:
+                    value_json = order_data[0]
+                    value = json.loads(value_json)
+                    new_status = value.get('status')
+
+                    if new_status != status:
+                        # Update the order status and emit a socket event
+                        status = new_status
+                        order['status'] = status
+                        socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/customer')
+
+                    if status == 'done':
+                        break
+
+        return jsonify(order), 200
     else:
         abort(404, f'Order with ID {order_id} not found')
+
 
 @customer_blueprint.route('/orders/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
@@ -118,6 +143,7 @@ def generate_order_id():
     order_id = str(timestamp)
     return order_id
 
+''' Test '''
 @customer_blueprint.route('/orders/<int:order_id>/done', methods=['POST'])
 def mark_order_done(order_id):
     key = f"/orders/{order_id}"
@@ -128,28 +154,53 @@ def mark_order_done(order_id):
         value = json.loads(value_json)
         status = value.get('status')
 
+        
+        # Update the status to "done"
+        value['status'] = "done"
+        value_json = json.dumps(value)
+
+        # Store the updated order data in etcd
+        etcd_client.put(key, value_json)
+        
+        # Emit a socket event to inform the frontend about the status change
+        socketio.emit('order_done', {'order_id': order_id, 'status': 'done'}, namespace='/customer')
+
+        return jsonify({'message': f"Order with ID {order_id} marked as done"}), 200
+
+    else:
+        abort(404, f"Order with ID {order_id} not found")
+
+@customer_blueprint.route('/orders/<int:order_id>/making', methods=['POST'])
+def mark_order_making(order_id):
+    key = f"/orders/{order_id}"
+    order_data = etcd_client.get(key)
+
+    if order_data is not None and order_data[0] is not None:
+        value_json = order_data[0]
+        value = json.loads(value_json)
+        status = value.get('status')
+
         if status == "pending":
-            # Update the status to "done"
-            value['status'] = "done"
+            # Update the status to "making"
+            value['status'] = "making"
             value_json = json.dumps(value)
 
             # Store the updated order data in etcd
             etcd_client.put(key, value_json)
 
             # Emit a socket event to inform the frontend about the status change
-            socketio.emit('order_done', {'order_id': order_id, 'status': 'done'}, namespace='/customer')
+            socketio.emit('order_making', {'order_id': order_id, 'status': 'making'}, namespace='/customer')
 
-            return jsonify({'message': f"Order with ID {order_id} marked as done"}), 200
+            return jsonify({'message': f"Order with ID {order_id} marked as making"}), 200
         else:
-            abort(400, f"Order with ID {order_id} cannot be marked as done. Status: {status}")
+            abort(400, f"Order with ID {order_id} cannot be marked as making. Status: {status}")
     else:
         abort(404, f"Order with ID {order_id} not found")
 
-''' Test
+''' Test'''
 @socketio.on('connect', namespace='/customer')
 def handle_connect():
     print('SocketIO connected')
-'''
 
 @socketio.on('order_created', namespace='/customer')
 def handle_order_created(data):
@@ -159,7 +210,6 @@ def handle_order_created(data):
 def handle_order_details(data):
     print('Order details:', data)
 
-    
 # register blueprint
 app.register_blueprint(customer_blueprint, url_prefix='/customer')
 
