@@ -317,10 +317,10 @@
   font-size: var(--font-size-11xl);
 }
 .content {
-  position: absolute;
-  top: 10vh;
-  left: 0px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(0.8); /* 调整比例，根据需要修改 */
 }
 .yuandonliIcon {
   position: relative;
