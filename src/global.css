@@ -28,4 +28,9 @@ body {
   /* border radiuses */
   --br-3xs: 10px;
   --br-xl: 20px;
+
+  /* standards */
+  --topbar-height: 10vh;
+  --line-height: 71.69vh;
+
 }

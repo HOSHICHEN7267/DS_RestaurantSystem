@@ -84,7 +84,7 @@ const CustomerEnd = () => {
           <div className={styles.description}>確認送出</div>
         </button>
         <div className={styles.line} />
-        <div className={styles.products} id="Products">
+        <div className={styles.products} id="products">
           <div className={styles.row1}>
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />

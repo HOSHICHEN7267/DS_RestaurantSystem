@@ -309,12 +309,18 @@
 }
 .products {
   position: absolute;
-  top: 196px;
-  left: 78px;
+  top: 19.95vh;
+  left: 5.15vw;
   flex-direction: column;
   align-items: center;
   gap: 50px;
   font-size: var(--font-size-11xl);
+}
+.content {
+  position: absolute;
+  top: 10vh;
+  left: 0px;
+  margin: 0 auto;
 }
 .yuandonliIcon {
   position: relative;
@@ -326,15 +332,12 @@
 .yuandonliIcon.animate {
   animation: 1s ease 0s 1 normal forwards slide-in-top;
 }
-.content {
-  margin: 0 auto;
-}
 .topBar {
   position: absolute;
   top: 0;
   left: 0;
   background-color: #23272b;
-  width: 100%;
+  width: 100vw;
   height: 10vh;
   display: flex;
   flex-direction: column;
@@ -348,11 +351,12 @@
   background-color: #fff3b1;
   border: 2px solid var(--color-black);
   box-sizing: border-box;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
   text-align: center;
   font-size: var(--font-size-7xl);
   color: var(--color-black);
   font-family: var(--font-inter);
+  margin: 0 auto;
 }
