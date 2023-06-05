@@ -1,17 +1,19 @@
-from flask import request, Blueprint, render_template, request, jsonify, abort
+from flask import Flask, request, Blueprint, request, jsonify, abort
 import etcd3
 import json
 import time
+from flask_socketio import SocketIO 
+
+app = Flask(__name__)
+socketio = SocketIO(app)
 
 etcd_client = etcd3.client(host='localhost', port=2379)
-#etcd_client = etcd3.client(host='192.168.40.150', port=2379)
 
 customer_blueprint = Blueprint('customer', __name__, template_folder='templates')
 
 @customer_blueprint.route('/', methods=['GET'])
 def route():
     return "Customer"
-    # return render_template("customer.html", emp=emp)
     
 @customer_blueprint.route('/orders', methods=['POST'])
 def create_order():
@@ -56,6 +58,9 @@ def create_order():
 
     # Store the order data in etcd
     etcd_client.put(key, value_json)
+    
+    # After storing the order, emit a socket event to inform the frontend
+    socketio.emit('order_created', {'order_id': order_id, 'status': status}, namespace='/customer')
 
     return jsonify({'message': f'Order created with ID: {order_id}'}), 200
 
@@ -80,8 +85,11 @@ def get_order(order_id):
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
+        
+        # Emit a socket event to send the order details to the frontend
+        socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/customer')
+
         return jsonify(order), 200
-        # return render_template("getOrder.html", ...)
     else:
         abort(404, f'Order with ID {order_id} not found')
 
@@ -99,7 +107,6 @@ def delete_order(order_id):
             # Delete the order if it's in a deletable state
             etcd_client.delete(key)
             return jsonify({'message': f"Order with ID {order_id} deleted"}), 400
-            # return render_template("deleteOrder.html", ...)
         else:
             abort(400, f"Order with ID {order_id} cannot be deleted. Status: {status}")
     else:
@@ -109,3 +116,10 @@ def generate_order_id():
     timestamp = int(time.time() * 1000)  # Multiply by 1000 to get milliseconds
     order_id = str(timestamp)
     return order_id
+
+
+# register blueprint
+app.register_blueprint(customer_blueprint, url_prefix='/customer')
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
