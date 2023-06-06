@@ -4,8 +4,8 @@
     <title>SocketIO Test</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
     <script>
-        var socket = io.connect('http://localhost:5000'); // Replace with your Flask app's URL
-
+        var socket = io.connect('http://localhost:5000/customer'); // Replace with your Flask app's URL
+        
         socket.on('connect', function() {
             console.log('SocketIO connected');
         });
@@ -16,39 +16,11 @@
 
         socket.on('order_details', function(data) {
             console.log('Order details:', data);
-            var order = data.order;
-
-            // Update the HTML with the new order details
-            updateOrderDetails(order);
-
-            if (order.status === 'done') {
-                console.log('Order is done. No longer listening for updates.');
-            } else {
-                // Continue listening for updates by requesting order details again
-                socket.emit('get_order_details', { order_id: order.order_id });
-            }
         });
-
-        // Initial request to get order details
-        socket.emit('get_order_details', { order_id: 1685976119139 }); // Replace <your_order_id> with the actual order ID
-
-        function updateOrderDetails(order) {
-            // Update the HTML with the new order details
-            document.getElementById('order_id').textContent = order.order_id;
-            document.getElementById('table_number').textContent = order.table_number;
-            document.getElementById('status').textContent = order.status;
-            // Update other order details accordingly
-
-            // Emit a socket event with the updated order details
-            socket.emit('update_order_details', { order_id: order.order_id, order: order });
-        }
     </script>
 </head>
 <body>
     <h1>SocketIO Test</h1>
-    <p>Order ID: <span id="order_id"></span></p>
-    <p>Table Number: <span id="table_number"></span></p>
-    <p>Status: <span id="status"></span></p>
-    <!-- Include other order details here -->
+    <p>Open the browser console to see the SocketIO events.</p>
 </body>
 </html>
