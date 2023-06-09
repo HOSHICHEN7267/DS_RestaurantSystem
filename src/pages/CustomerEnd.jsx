@@ -3,10 +3,12 @@ import styles from "./CustomerEnd.module.css";
 const CustomerEnd = () => {
   const onMinusClick = useCallback(() => {
     //TODO: Amount decreament
+    console.log("-1"); // will only work for item 1 now
   }, []);
 
   const onPlusClick = useCallback(() => {
     //TODO: Amount increament
+    console.log("+1"); // will only work for item 1 now
   }, []);
 
   useEffect(() => {
