@@ -2,12 +2,7 @@ from flask import Flask, request, Blueprint, request, jsonify, abort
 import etcd3
 import json
 import time
-from flask_socketio import SocketIO 
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app) 
-socketio = SocketIO(app, cors_allowed_origins="*") 
+from socket_handlers import socketio
 
 etcd_client = etcd3.client(host='localhost', port=2379)
 
@@ -197,21 +192,3 @@ def mark_order_making(order_id):
     else:
         abort(404, f"Order with ID {order_id} not found")
 
-''' ............................'''
-@socketio.on('connect', namespace='/customer')
-def handle_connect():
-    print('SocketIO connected')
-
-@socketio.on('order_created', namespace='/customer')
-def handle_order_created(data):
-    print('Order created:', data)
-
-@socketio.on('order_details', namespace='/customer')
-def handle_order_details(data):
-    print('Order details:', data)
-
-# register blueprint
-app.register_blueprint(customer_blueprint, url_prefix='/customer')
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True)
