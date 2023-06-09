@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SocketIO Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:5000/customer'); // Replace with your Flask app's URL
+        
+        socket.on('connect', function() {
+            console.log('SocketIO connected');
+        });
+
+        socket.on('order_created', function(data) {
+            console.log('Order created:', data);
+        });
+
+        socket.on('order_details', function(data) {
+            console.log('Order details:', data);
+        });
+    </script>
+</head>
+<body>
+    <h1>SocketIO Test</h1>
+    <p>Open the browser console to see the SocketIO events.</p>
+</body>
+</html>

@@ -1,10 +1,13 @@
 from flask import request, Blueprint, render_template, request, jsonify, abort
+from flask_socketio import SocketIO 
 import etcd3
 import json
 import time
 
+app = Flask(__name__)
+socketio = SocketIO(app)
+
 etcd_client = etcd3.client(host='localhost', port=2379)
-#etcd_client = etcd3.client(host='192.168.40.150', port=2379)
 
 restaurant_blueprint = Blueprint('restaurant', __name__, template_folder='templates')
 
@@ -35,6 +38,10 @@ def update_order(order_id):
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
+        etcd_client.put(key, order)
+
+        socketio.emit('order_update', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
     else:
@@ -62,6 +69,8 @@ def lookup_order(order_id):
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
+        socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
     else:
