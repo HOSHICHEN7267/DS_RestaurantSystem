@@ -1,8 +1,6 @@
-from flask import request, Blueprint, render_template, request, jsonify, abort
-from flask_socketio import SocketIO 
+from flask import Blueprint, jsonify, abort
 import etcd3
 import json
-import time
 from socket_handlers import socketio
 
 
@@ -39,7 +37,7 @@ def update_order(order_id):
         }
         etcd_client.put(key, order)
 
-        socketio.emit('order_update', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+        socketio.emit('order_update', {'order_id': order_id, 'order': order}, namespace='/customer')
 
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
@@ -68,7 +66,7 @@ def lookup_order(order_id):
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
-        socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+        #socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/restuarant')
 
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
@@ -114,7 +112,7 @@ def mark_order_done(order_id):
         etcd_client.put(key, value_json)
         
         # Emit a socket event to inform the frontend about the status change
-        socketio.emit('order_done', {'order_id': order_id, 'status': 'done'}, namespace='/restaurant')
+        socketio.emit('order_details', {'order_id': order_id, 'status': 'done'}, namespace='/customer')
 
         return jsonify({'message': f"Order with ID {order_id} marked as done"}), 200
 
@@ -140,7 +138,7 @@ def mark_order_making(order_id):
             etcd_client.put(key, value_json)
 
             # Emit a socket event to inform the frontend about the status change
-            socketio.emit('order_making', {'order_id': order_id, 'status': 'making'}, namespace='/restaurant')
+            socketio.emit('order_details', {'order_id': order_id, 'status': 'making'}, namespace='/customer')
 
             return jsonify({'message': f"Order with ID {order_id} marked as making"}), 200
         else:
