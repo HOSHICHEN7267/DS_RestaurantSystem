@@ -1,11 +1,13 @@
-from flask import request, Blueprint, render_template, request, jsonify, abort
+from flask import Flask, request, Blueprint, request, jsonify, abort
 from flask_socketio import SocketIO 
+from flask_cors import CORS
 import etcd3
 import json
 import time
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+CORS(app) 
+socketio = SocketIO(app, cors_allowed_origins="*") 
 
 etcd_client = etcd3.client(host='localhost', port=2379)
 
@@ -25,7 +27,10 @@ def update_order(order_id):
         value_json = order_data[0]
         value = json.loads(value_json)
         order_items = value.get('order_items')
-        status = 'done'
+        if status == 'pending':
+            status = 'making'
+        else:   
+            status = 'done'
 
 
         # Calculate the total price of the order
@@ -38,9 +43,8 @@ def update_order(order_id):
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
-        etcd_client.put(key, order)
-
-        socketio.emit('order_update', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+        json_order = json.dumps(order)
+        etcd_client.put(key, json_order)
 
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
@@ -86,7 +90,7 @@ def delete_order(order_id):
         value = json.loads(value_json)
         status = value.get('status')
         
-        if status == "pending":
+        if status == "done":
             # Delete the order if it's in a deletable state
             etcd_client.delete(key)
             return jsonify({'message': f"Order with ID {order_id} deleted"}), 400
@@ -96,3 +100,20 @@ def delete_order(order_id):
     else:
         abort(404, f"Order with ID {order_id} not found")
 
+@socketio.on('connect', namespace='/customer')
+def handle_connect():
+    print('SocketIO connected')
+
+@socketio.on('order_created', namespace='/customer')
+def handle_order_created(data):
+    print('Order created:', data)
+
+@socketio.on('order_details', namespace='/customer')
+def handle_order_details(data):
+    print('Order details:', data)
+
+# register blueprint
+app.register_blueprint(restaurant_blueprint, url_prefix='/restaurant')
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
