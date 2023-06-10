@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import styles from "./CustomerEnd.module.css";
+import io from 'socket.io-client';
 
 function ListButton() {
   const [state, setState] = useState("order");
   const [orderID, setOrderID] = useState("");
   const url = "http://127.0.0.1:5000/customer/orders"; // url to fetch
+  const socket = io('http://127.0.0.1:5000/customer/orders');
+
   let message = ""; // the message returned by etcd
 
   // a fake order
@@ -28,6 +31,11 @@ function ListButton() {
       },
     ]
   };
+
+  socket.on('order_details', function(data) {
+    console.log("Order details: " + JSON.stringify(data));
+    // setStatus('Order details: ' + JSON.stringify(data));
+  });
 
   const orderButton = () => {
     // create an order
