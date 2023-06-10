@@ -38,13 +38,12 @@ def create_order():
             order_items[food_name] = {
                 'price': food_price,
                 'quantity': food_quantity,
-                'total_price': food_price * food_quantity
             }
         else:
             order_items[food_name]['quantity'] += food_quantity
-            order_items[food_name]['total_price'] += food_price * food_quantity
 
     value = {
+        'order_id': key,
         'table_number': table_number,
         'status': status,
         'order_items': order_items
@@ -72,7 +71,7 @@ def get_order(order_id):
         order_items = value.get('order_items')
         status = value.get('status')
 
-        # Calculate the total price of the order
+        # Calculate the total price of the order 
         total_price_all_foods = sum(item['total_price'] for item in order_items.values())
 
         order = {
