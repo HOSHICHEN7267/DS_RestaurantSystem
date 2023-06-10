@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from "./CustomerEnd.module.css";
 import io from 'socket.io-client';
 
-function ListButton() {
+function ListButton(props) {
   const [state, setState] = useState("order");
   const [orderID, setOrderID] = useState("");
   //const [text, setText] = useState("");
@@ -11,27 +11,28 @@ function ListButton() {
 
   let message = ""; // the message returned by etcd
 
+  const dishes = props.dishes;
   // a fake order
-  const order = {
-    table_number: 5,
-    foods: [
-      {
-        name: "karaagedon",
-        price: 120,
-        quantity: 2
-      },
-      {
-        name: "porkdon",
-        price: 160,
-        quantity: 1
-      },
-      {
-        name: "katsudon",
-        price: 130,
-        quantity: 3
-      },
-    ]
-  };
+  // const order = {
+  //   table_number: 5,
+  //   foods: [
+  //     {
+  //       name: "karaagedon",
+  //       price: 120,
+  //       quantity: 2
+  //     },
+  //     {
+  //       name: "porkdon",
+  //       price: 160,
+  //       quantity: 1
+  //     },
+  //     {
+  //       name: "katsudon",
+  //       price: 130,
+  //       quantity: 3
+  //     },
+  //   ]
+  // };
 
   socket.on('order_details', function(data) {
     //console.log("Order details: " + JSON.stringify(data));
@@ -53,7 +54,7 @@ function ListButton() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(order)
+      body: JSON.stringify(dishes)
     })
       .then(response => response.json())
       .then(data => {

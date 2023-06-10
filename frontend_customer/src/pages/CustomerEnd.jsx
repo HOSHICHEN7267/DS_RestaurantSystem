@@ -111,7 +111,7 @@ const CustomerEnd = () => {
         <div className={styles.title}>
           <div className={styles.name}>我的訂單</div>
         </div>
-        <ListButton />
+        <ListButton dishes={dishes} />
         <div className={styles.line} />
         <div className={styles.products} id="products">
           <div className={styles.row1}>
