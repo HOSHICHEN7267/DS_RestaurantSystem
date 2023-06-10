@@ -45,6 +45,7 @@ const CustomerEnd = () => {
 
   return (
     <main className={styles.customerEnd}>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
       <div className={styles.content}>
         <div className={styles.list}>
           <div className={styles.dishes}>

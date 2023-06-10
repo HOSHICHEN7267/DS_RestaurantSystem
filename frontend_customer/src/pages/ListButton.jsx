@@ -5,8 +5,9 @@ import io from 'socket.io-client';
 function ListButton() {
   const [state, setState] = useState("order");
   const [orderID, setOrderID] = useState("");
+  //const [text, setText] = useState("");
   const url = "http://127.0.0.1:5000/customer/orders"; // url to fetch
-  const socket = io('http://127.0.0.1:5000/customer/orders');
+  const socket = io('http://127.0.0.1:5000/customer');
 
   let message = ""; // the message returned by etcd
 
@@ -33,8 +34,16 @@ function ListButton() {
   };
 
   socket.on('order_details', function(data) {
-    console.log("Order details: " + JSON.stringify(data));
-    // setStatus('Order details: ' + JSON.stringify(data));
+    //console.log("Order details: " + JSON.stringify(data));
+    console.log("data: " + JSON.stringify(data));
+    if(data.order_id == orderID){
+      if(data.status == "making"){
+        setState("preparing");
+      }
+      else if(data.status == "done"){
+        setState("order");
+      }
+    }
   });
 
   const orderButton = () => {
@@ -75,12 +84,12 @@ function ListButton() {
         console.error('發生錯誤:', error);
       });
 
-    setState("preparing");
+    setState("order");
   };
 
   const preparingButton = () => {
     // wait for signal from etcd to call this function
-    setState("order");
+    console.log("Preparing");
   };
 
   switch (state) {
