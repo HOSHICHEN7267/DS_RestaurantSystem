@@ -4,7 +4,17 @@ import json
 import time
 from socket_handlers import socketio
 
-etcd_client = etcd3.client(host='localhost', port=2379)
+count =  1
+
+def generate_order_id():
+    # timestamp = int(time.time() * 1000)  # Multiply by 1000 to get milliseconds
+    # order_id = str(timestamp)
+    global count
+    order_id = count
+    count = count + 1
+    return order_id
+
+etcd_client = etcd3.client(host='192.168.56.201', port=2379)
 
 customer_blueprint = Blueprint('customer', __name__, template_folder='templates')
 
@@ -38,12 +48,13 @@ def create_order():
             order_items[food_name] = {
                 'price': food_price,
                 'quantity': food_quantity,
+                'total_price': food_price * food_quantity
             }
         else:
             order_items[food_name]['quantity'] += food_quantity
+            order_items[food_name]['total_price'] += food_price * food_quantity
 
     value = {
-        'order_id': key,
         'table_number': table_number,
         'status': status,
         'order_items': order_items
@@ -71,7 +82,7 @@ def get_order(order_id):
         order_items = value.get('order_items')
         status = value.get('status')
 
-        # Calculate the total price of the order 
+        # Calculate the total price of the order
         total_price_all_foods = sum(item['total_price'] for item in order_items.values())
 
         order = {
@@ -109,7 +120,5 @@ def delete_order(order_id):
     else:
         abort(404, f"Order with ID {order_id} not found")
 
-def generate_order_id():
-    timestamp = int(time.time() * 1000)  # Multiply by 1000 to get milliseconds
-    order_id = str(timestamp)
-    return order_id
+
+
