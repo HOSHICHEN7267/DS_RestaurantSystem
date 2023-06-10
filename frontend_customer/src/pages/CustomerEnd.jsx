@@ -1,17 +1,14 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./CustomerEnd.module.css";
 import ListButton from './ListButton.jsx';
 
 const CustomerEnd = () => {
-  const onMinusClick = useCallback(() => {
-    //TODO: Amount decreament
-    console.log("-1"); // will only work for item 1 now
-  }, []);
-
-  const onPlusClick = useCallback(() => {
-    //TODO: Amount increament
-    console.log("+1"); // will only work for item 1 now
-  }, []);
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(0);
+  const [count3, setCount3] = useState(0);
+  const [count4, setCount4] = useState(0);
+  const [count5, setCount5] = useState(0);
+  const [count6, setCount6] = useState(0);
 
   useEffect(() => {
     const scrollAnimElements = document.querySelectorAll(
@@ -45,7 +42,6 @@ const CustomerEnd = () => {
 
   return (
     <main className={styles.customerEnd}>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
       <div className={styles.content}>
         <div className={styles.list}>
           <div className={styles.dishes}>
@@ -92,13 +88,17 @@ const CustomerEnd = () => {
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />
               <div className={styles.button}>
-                <button className={styles.minus} onClick={onMinusClick}>
+                <button className={styles.minus} onClick={() => {
+                    if (count1 > 0) {
+                        setCount1(count1 - 1);
+                    }
+                }}>
                   <img className={styles.vectorIcon} alt="" src="/vector.svg" />
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
-                <div className={styles.amount6}>0</div>
-                <button className={styles.plus} onClick={onPlusClick}>
-                  <img className={styles.vectorIcon} alt="" src="/vector.svg" />
+                <span className={styles.amount6}>{count1}</span>
+                <button className={styles.plus} onClick={() => setCount1(count1 + 1)}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" /> 
                   <img className={styles.vectorIcon3} alt="" src="/vector2.svg" />
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
@@ -116,20 +116,24 @@ const CustomerEnd = () => {
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />
               <div className={styles.button}>
-                <button className={styles.minus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector3.svg" />
-                  <img className={styles.vectorIcon1} alt="" src="/vector4.svg" />
+                <button className={styles.minus} onClick={() => {
+                    if (count2 > 0) {
+                        setCount2(count2 - 1);
+                    }
+                }}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
-                <div className={styles.amount6}>0</div>
-                <button className={styles.plus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector3.svg" />
+                <span className={styles.amount6}>{count2}</span>
+                <button className={styles.plus} onClick={() => setCount2(count2 + 1)}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" /> 
                   <img className={styles.vectorIcon3} alt="" src="/vector2.svg" />
-                  <img className={styles.vectorIcon1} alt="" src="/vector4.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>經典燒肉丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -144,20 +148,24 @@ const CustomerEnd = () => {
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />
               <div className={styles.button}>
-                <button className={styles.minus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector5.svg" />
+                <button className={styles.minus} onClick={() => {
+                    if (count3 > 0) {
+                        setCount3(count3 - 1);
+                    }
+                }}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" />
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
-                <div className={styles.amount6}>0</div>
-                <button className={styles.plus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector5.svg" />
-                  <img className={styles.vectorIcon3} alt="" src="/vector6.svg" />
+                <span className={styles.amount6}>{count3}</span>
+                <button className={styles.plus} onClick={() => setCount3(count3 + 1)}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" /> 
+                  <img className={styles.vectorIcon3} alt="" src="/vector2.svg" />
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>香煎嫩雞腿丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -170,20 +178,24 @@ const CustomerEnd = () => {
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />
               <div className={styles.button}>
-                <button className={styles.minus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector7.svg" />
-                  <img className={styles.vectorIcon1} alt="" src="/vector4.svg" />
+                <button className={styles.minus} onClick={() => {
+                    if (count4 > 0) {
+                        setCount4(count4 - 1);
+                    }
+                }}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
-                <div className={styles.amount6}>0</div>
-                <button className={styles.plus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector7.svg" />
-                  <img className={styles.vectorIcon3} alt="" src="/vector6.svg" />
-                  <img className={styles.vectorIcon1} alt="" src="/vector4.svg" />
+                <span className={styles.amount6}>{count4}</span>
+                <button className={styles.plus} onClick={() => setCount4(count4 + 1)}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" /> 
+                  <img className={styles.vectorIcon3} alt="" src="/vector2.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>日式炸豬排丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -198,24 +210,24 @@ const CustomerEnd = () => {
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />
               <div className={styles.button}>
-                <button className={styles.minus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector8.svg" />
-                  <img className={styles.vectorIcon1} alt="" src="/vector9.svg" />
+                <button className={styles.minus} onClick={() => {
+                    if (count5 > 0) {
+                        setCount5(count5 - 1);
+                    }
+                }}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
-                <div className={styles.amount6}>0</div>
-                <button className={styles.plus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector8.svg" />
-                  <img
-                    className={styles.vectorIcon3}
-                    alt=""
-                    src="/vector10.svg"
-                  />
-                  <img className={styles.vectorIcon1} alt="" src="/vector9.svg" />
+                <span className={styles.amount6}>{count5}</span>
+                <button className={styles.plus} onClick={() => setCount5(count5 + 1)}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" /> 
+                  <img className={styles.vectorIcon3} alt="" src="/vector2.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>骰子牛肉丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -228,32 +240,24 @@ const CustomerEnd = () => {
             <div className={styles.product1} id="Product">
               <div className={styles.rec} />
               <div className={styles.button}>
-                <button className={styles.minus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector11.svg" />
-                  <img
-                    className={styles.vectorIcon1}
-                    alt=""
-                    src="/vector12.svg"
-                  />
+                <button className={styles.minus} onClick={() => {
+                    if (count6 > 0) {
+                        setCount6(count6 - 1);
+                    }
+                }}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
-                <div className={styles.amount6}>0</div>
-                <button className={styles.plus}>
-                  <img className={styles.vectorIcon} alt="" src="/vector11.svg" />
-                  <img
-                    className={styles.vectorIcon3}
-                    alt=""
-                    src="/vector10.svg"
-                  />
-                  <img
-                    className={styles.vectorIcon1}
-                    alt=""
-                    src="/vector12.svg"
-                  />
+                <span className={styles.amount6}>{count6}</span>
+                <button className={styles.plus} onClick={() => setCount6(count6 + 1)}>
+                  <img className={styles.vectorIcon} alt="" src="/vector.svg" /> 
+                  <img className={styles.vectorIcon3} alt="" src="/vector2.svg" />
+                  <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>丼丼</div>
               </div>
               <div className={styles.image}>
                 <img
