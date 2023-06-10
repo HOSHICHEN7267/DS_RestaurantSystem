@@ -1,0 +1,209 @@
+.restaurantEndChild,
+.yuandonli1Icon {
+  position: absolute;
+  top: 135px;
+  left: calc(50% + 346.84px);
+  width: 10px;
+  height: 808px;
+}
+
+.yuandonli1Icon {
+  top: 8px;
+  left: calc(50% - 100px);
+  width: 200px;
+  height: 71px;
+  object-fit: cover;
+}
+
+.topBar {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+  background-color: #23272b;
+  width: 100%;
+  height: 87px;
+}
+
+.left {
+  width: 800px;
+  height: 700px;
+  position: fixed;
+  top: 480px;
+  left: 740px;
+  flex-wrap: wrap;
+  transform: translate(-50%, -50%);
+  border-right: 2px solid #949494;
+  padding: 10px;
+  display: flex;
+  align-content: flex-start;
+  overflow-y: auto;
+}
+
+.order {
+  box-sizing: border-box;
+  position: relative;
+  width: calc(33.33% - 20px);
+  height: calc(33.33% - 120px);
+  background: #fffafa95;
+  border: 2px solid #cecbcb;
+  border-radius: 20px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.no {
+  font-size: 28px;
+  font-weight: bold;
+  position: relative;
+  top: 30%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+}
+
+.nt {
+  font-size: 25px;
+  color: #888888;
+  position: relative;
+  top: 40%;
+  left: 27.5%;
+  transform: translate(-50%, -50%);
+}
+
+.checkIcon {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 30px;
+  right: 18px;
+}
+
+.restaurantEnd {
+  display: flex;
+  position: relative;
+  background-color: #fff3b1;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  font-size: var(--font-size-17xl);
+  color: var(--color-black);
+  font-family: var(--font-inter);
+}
+
+.right {
+  width: 437px;
+  height: 700px;
+  position: fixed;
+  top: 470px;
+  right: 70px;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+}
+
+.orderDetail {
+  position: relative;
+  width: 367px;
+  height: 670px;
+  max-width: 100%;
+  max-height: 100%;
+  font-size: var(--font-size-17xl);
+  color: var(--color-black);
+  font-family: var(--font-inter);
+  text-align: center;
+  /* border: 2px solid #000; */
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.content {
+  position: absolute;
+  height: 560px;
+  width: 100%;
+  left: 0;
+  background-color: var(--color-white);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  font-size: var(--font-size-11xl);
+  border-radius: 10px;
+}
+
+.orderNo {
+  margin-top: 15px;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 430px;
+  background-color: #fefbdf;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 13px;
+  flex-wrap: wrap;
+}
+
+.name {
+  font-size: 23px;
+  flex-grow: 1;
+  text-align: left;
+  align-self: flex-end;
+}
+
+.amount,
+.price {
+  font-size: 20px;
+  margin-left: 10px;
+  align-self: flex-end;
+}
+
+.total {
+  height: 60px;
+  font-size: 25px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.acButton {
+  top: 625px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #a0f11a;
+  border-radius: 10px;
+  border-color: #d1ae8c;
+  height: 80px;
+  width: 180px;
+}
+
+.fnButton {
+  top: 625px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f19b1a;
+  border-radius: 10px;
+  border-color: #d1ae8c;
+  height: 80px;
+  width: 180px;
+}
+
+.buttonText {
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+}
