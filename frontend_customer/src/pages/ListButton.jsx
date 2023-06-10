@@ -12,27 +12,11 @@ function ListButton(props) {
   let message = ""; // the message returned by etcd
 
   const dishes = props.dishes;
-  // a fake order
-  // const order = {
-  //   table_number: 5,
-  //   foods: [
-  //     {
-  //       name: "karaagedon",
-  //       price: 120,
-  //       quantity: 2
-  //     },
-  //     {
-  //       name: "porkdon",
-  //       price: 160,
-  //       quantity: 1
-  //     },
-  //     {
-  //       name: "katsudon",
-  //       price: 130,
-  //       quantity: 3
-  //     },
-  //   ]
-  // };
+
+  const order = {
+    table_number: 5,
+    foods: dishes
+  };
 
   socket.on('order_details', function(data) {
     //console.log("Order details: " + JSON.stringify(data));
@@ -48,13 +32,14 @@ function ListButton(props) {
   });
 
   const orderButton = () => {
+    console.log("order: " + JSON.stringify(order));
     // create an order
     fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(dishes)
+      body: JSON.stringify(order)
     })
       .then(response => response.json())
       .then(data => {
