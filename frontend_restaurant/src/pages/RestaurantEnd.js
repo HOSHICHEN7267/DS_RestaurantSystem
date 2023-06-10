@@ -3,6 +3,7 @@ import styles from "./RestaurantEnd.module.css";
 
 var order_table = [];
 var max_ordernum = 1;
+var pre_max_ordernum = max_ordernum + 1;
 
 const RestaurantEnd = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -71,7 +72,15 @@ const RestaurantEnd = () => {
   };
 
   useEffect(() => {
+    var isFetching = false; // 追蹤請求是否正在進行中
+
     var fetchOrderData = () => {
+      if (isFetching) {
+        return; // 如果已經有請求正在進行中，則不執行新的請求
+      }
+
+      isFetching = true; // 設置請求狀態為進行中
+
       var url = `http://127.0.0.1:5000/restaurant/orders/${max_ordernum}`;
       fetch(url)
         .then((response) => {
@@ -81,13 +90,17 @@ const RestaurantEnd = () => {
           return response.json();
         })
         .then((data) => {
+          max_ordernum = max_ordernum + 1;
           transformOrderData(data);
         })
         .catch((error) => {
           console.error(error);
+        })
+        .finally(() => {
+          isFetching = false; // 請求完成後重置請求狀態
         });
-    };
-  
+    }
+    
     const transformOrderData = (fetchedData) => {
       var table = [];
       for (var itemName in fetchedData.order_items) {
@@ -108,14 +121,12 @@ const RestaurantEnd = () => {
       };
   
       setOrders((prevOrders) => [...prevOrders, newOrder]);
-  
-      
-      max_ordernum = max_ordernum + 1;
+
     };
 
     const intervalId = setInterval(fetchOrderData, 5000);
-    fetchOrderData();
-  
+    
+
     return () => {
       clearInterval(intervalId);
     };
