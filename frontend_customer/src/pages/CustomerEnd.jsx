@@ -129,7 +129,7 @@ const CustomerEnd = () => {
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>香煎嫩雞腿丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -155,9 +155,9 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.160</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>味噌烤鯖魚飯</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -181,9 +181,9 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector4.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.130</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>日式炸豬排丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -213,9 +213,9 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector9.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.180</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>骰子牛肉丼</div>
               </div>
               <div className={styles.image}>
                 <img
@@ -251,9 +251,9 @@ const CustomerEnd = () => {
                   />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.160</div>
               <div className={styles.title1}>
-                <div className={styles.name}>原丼力炸雞丼</div>
+                <div className={styles.name}>鹽烤松阪豬丼</div>
               </div>
               <div className={styles.image}>
                 <img
