@@ -7,20 +7,25 @@
         var socket = io.connect('http://localhost:5000/customer'); // Replace with your Flask app's URL
         
         socket.on('connect', function() {
-            console.log('SocketIO connected');
+            setStatus('Connected to SocketIO');
         });
 
         socket.on('order_created', function(data) {
-            console.log('Order created:', data);
+            setStatus('Order created: ' + JSON.stringify(data));
         });
 
         socket.on('order_details', function(data) {
-            console.log('Order details:', data);
+            setStatus('Order details: ' + JSON.stringify(data));
         });
+
+        function setStatus(message) {
+            var statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+        }
     </script>
 </head>
 <body>
     <h1>SocketIO Test</h1>
-    <p>Open the browser console to see the SocketIO events.</p>
+    <p id="status">Status will be displayed here</p>
 </body>
 </html>
