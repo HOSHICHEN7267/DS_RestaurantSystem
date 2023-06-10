@@ -5,6 +5,8 @@ import time
 from socket_handlers import socketio
 
 etcd_client = etcd3.client(host='localhost', port=2379)
+#etcd_client = etcd3.client(host='192.168.40.150', port=2379)
+
 
 customer_blueprint = Blueprint('customer', __name__, template_folder='templates')
 
