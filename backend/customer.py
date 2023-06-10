@@ -72,7 +72,7 @@ def get_order(order_id):
         status = value.get('status')
 
         # Calculate the total price of the order 
-        total_price_all_foods = sum(item['total_price'] for item in order_items.values())
+        total_price_all_foods = sum(item['price'] for item in order_items.values())
 
         order = {
             'order_id': order_id,
@@ -103,7 +103,7 @@ def delete_order(order_id):
             # Delete the order if it's in a deletable state
             etcd_client.delete(key)
             socketio.emit('order_details', {'order_id': order_id, 'status': 'deleted'}, namespace='/customer')
-            return jsonify({'message': f"Order with ID {order_id} deleted"}), 400
+            return jsonify({'message': f"Order with ID {order_id} deleted"}), 200
         else:
             abort(400, f"Order with ID {order_id} cannot be deleted. Status: {status}")
     else:
