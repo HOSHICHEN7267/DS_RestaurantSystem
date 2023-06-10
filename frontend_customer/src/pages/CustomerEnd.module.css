@@ -127,6 +127,8 @@
   text-align: center;
 }
 .orderButton {
+  position: absolute;
+  box-sizing: border-box;
   cursor: pointer;
   border: 3px solid var(--color-black);
   padding: 0;
@@ -138,8 +140,35 @@
   height: 65px;
   overflow: hidden;
 }
+.cancelButton {
+  position: absolute;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 3px solid var(--color-black);
+  padding: 0;
+  background-color: #F29C9C;
+  top: 793px;
+  left: 1161px;
+  border-radius: var(--br-xl);
+  width: 185px;
+  height: 65px;
+  overflow: hidden;
+}
+.preparingButton {
+  position: absolute;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 3px solid var(--color-black);
+  padding: 0;
+  background-color: #AEC9F2;
+  top: 793px;
+  left: 1161px;
+  border-radius: var(--br-xl);
+  width: 185px;
+  height: 65px;
+  overflow: hidden;
+}
 .line,
-.orderButton,
 .rec {
   position: absolute;
   box-sizing: border-box;
