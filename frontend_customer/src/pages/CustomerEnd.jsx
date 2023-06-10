@@ -10,6 +10,39 @@ const CustomerEnd = () => {
   const [count5, setCount5] = useState(0);
   const [count6, setCount6] = useState(0);
 
+  const dishes = [
+    {
+      name: "原丼力炸雞丼",
+      count: count1,
+      price: 120 * count1,
+    },
+    {
+      name: "香煎嫩雞腿丼",
+      count: count2,
+      price: 120 * count2,
+    },
+    {
+      name: "味噌烤鯖魚飯",
+      count: count3,
+      price: 160 * count3,
+    },
+    {
+      name: "日式炸豬排丼",
+      count: count4,
+      price: 130 * count4,
+    },
+    {
+      name: "骰子牛肉丼",
+      count: count5,
+      price: 180  * count5,
+    },
+    {
+      name: "鹽烤松阪豬丼",
+      count: count6,
+      price: 160 * count6,
+    },
+  ];
+
   useEffect(() => {
     const scrollAnimElements = document.querySelectorAll(
       "[data-animate-on-scroll]"
@@ -46,36 +79,32 @@ const CustomerEnd = () => {
       <div className={styles.content}>
         <div className={styles.list}>
           <div className={styles.dishes}>
-            <div className={styles.dish1}>
-              <div className={styles.name}>原丼力炸雞丼</div>
-              <div className={styles.amount}>x2</div>
-              <div className={styles.price}>NT 240</div>
-            </div>
-            <div className={styles.dish1}>
-              <div className={styles.name1}>經典燒肉丼</div>
-              <div className={styles.amount}>x2</div>
-              <div className={styles.price}>NT 240</div>
-            </div>
-            <div className={styles.dish1}>
-              <div className={styles.name}>香煎嫩雞腿丼</div>
-              <div className={styles.amount}>x2</div>
-              <div className={styles.price}>NT 240</div>
-            </div>
-            <div className={styles.dish1}>
-              <div className={styles.name}>日式炸豬排丼</div>
-              <div className={styles.amount}>x2</div>
-              <div className={styles.price}>NT 240</div>
-            </div>
-            <div className={styles.dish1}>
-              <div className={styles.name1}>骰子牛肉丼</div>
-              <div className={styles.amount}>x2</div>
-              <div className={styles.price}>NT 240</div>
-            </div>
+            {dishes.map((dish, index) => {
+              if (dish.count > 0) {
+                return (
+                  <div className={styles.dish1} key={index}>
+                    <div className={styles.name}>{dish.name}</div>
+                    <div className={styles.amount}>x{dish.count}</div>
+                    <div className={styles.price}>NT {dish.price}</div>
+                  </div>
+                );
+              }
+              return null;
+            })}
           </div>
           <div className={styles.total}>
             <div className={styles.name5}>合計</div>
-            <div className={styles.amount5}>x2</div>
-            <div className={styles.price5}>NT 240</div>
+            <div className={styles.amount5}>
+              x
+              {dishes.reduce((total, dish) => total + dish.count, 0)}
+            </div>
+            <div className={styles.price5}>
+              NT{" "}
+              {dishes.reduce(
+                (total, dish) => total + dish.price,
+                0
+              )}
+            </div>
           </div>
           <div className={styles.listChild} />
         </div>
