@@ -42,6 +42,7 @@ const CustomerEnd = () => {
 
   return (
     <main className={styles.customerEnd}>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
       <div className={styles.content}>
         <div className={styles.list}>
           <div className={styles.dishes}>
@@ -133,13 +134,13 @@ const CustomerEnd = () => {
               </div>
               <div className={styles.price6}>NT.120</div>
               <div className={styles.title1}>
-                <div className={styles.name}>經典燒肉丼</div>
+                <div className={styles.name}>香煎嫩雞腿丼</div>
               </div>
               <div className={styles.image}>
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-1@2x.png"
+                  src="/chickendon.png"
                 />
               </div>
             </div>
@@ -163,15 +164,15 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.160</div>
               <div className={styles.title1}>
-                <div className={styles.name}>香煎嫩雞腿丼</div>
+                <div className={styles.name}>味噌烤鯖魚飯</div>
               </div>
               <div className={styles.image}>
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-1@2x.png"
+                  src="/fishdon.png"
                 />
               </div>
             </div>
@@ -193,7 +194,7 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.130</div>
               <div className={styles.title1}>
                 <div className={styles.name}>日式炸豬排丼</div>
               </div>
@@ -201,7 +202,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-1@2x.png"
+                  src="/katsudon.png"
                 />
               </div>
             </div>
@@ -225,7 +226,7 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.180</div>
               <div className={styles.title1}>
                 <div className={styles.name}>骰子牛肉丼</div>
               </div>
@@ -233,7 +234,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-11@2x.png"
+                  src="/beefdon.png"
                 />
               </div>
             </div>
@@ -255,15 +256,15 @@ const CustomerEnd = () => {
                   <img className={styles.vectorIcon1} alt="" src="/vector1.svg" />
                 </button>
               </div>
-              <div className={styles.price6}>NT.120</div>
+              <div className={styles.price6}>NT.160</div>
               <div className={styles.title1}>
-                <div className={styles.name}>丼丼</div>
+                <div className={styles.name}>鹽烤松阪豬丼</div>
               </div>
               <div className={styles.image}>
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-11@2x.png"
+                  src="/porkdon.png"
                 />
               </div>
             </div>
