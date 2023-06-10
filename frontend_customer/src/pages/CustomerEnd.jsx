@@ -1,5 +1,7 @@
 import { useCallback, useEffect } from "react";
 import styles from "./CustomerEnd.module.css";
+import ListButton from './ListButton.jsx';
+
 const CustomerEnd = () => {
   const onMinusClick = useCallback(() => {
     //TODO: Amount decreament
@@ -82,9 +84,7 @@ const CustomerEnd = () => {
         <div className={styles.title}>
           <div className={styles.name}>我的訂單</div>
         </div>
-        <button className={styles.orderButton}>
-          <div className={styles.description}>確認送出</div>
-        </button>
+        <ListButton />
         <div className={styles.line} />
         <div className={styles.products} id="products">
           <div className={styles.row1}>
