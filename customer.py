@@ -75,7 +75,7 @@ def get_order(order_id):
 
         # Calculate the total price of the order
         total_price_all_foods = sum(item['total_price'] for item in order_items.values())
-
+ 
         order = {
             'order_id': order_id,
             'table_number': value.get('table_number'),

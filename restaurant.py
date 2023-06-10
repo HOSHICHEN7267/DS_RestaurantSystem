@@ -10,7 +10,7 @@ restaurant_blueprint = Blueprint('restaurant', __name__, template_folder='templa
 
 @restaurant_blueprint.route('/', methods=['GET'])
 def route():
-    return "Restaurant"
+    return "Restaurant" 
 
 @restaurant_blueprint.route('/l_orders/<int:order_id>', methods=['GET'])
 def lookup_order(order_id):
