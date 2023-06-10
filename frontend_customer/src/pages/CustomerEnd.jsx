@@ -135,7 +135,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-1@2x.png"
+                  src="/chickendon.png"
                 />
               </div>
             </div>
@@ -163,7 +163,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-1@2x.png"
+                  src="/fishdon.png"
                 />
               </div>
             </div>
@@ -189,7 +189,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-1@2x.png"
+                  src="/katsudon.png"
                 />
               </div>
             </div>
@@ -221,7 +221,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-11@2x.png"
+                  src="/beefdon.png"
                 />
               </div>
             </div>
@@ -259,7 +259,7 @@ const CustomerEnd = () => {
                 <img
                   className={styles.karaagedon1Icon}
                   alt=""
-                  src="/karaagedon-11@2x.png"
+                  src="/porkdon.png"
                 />
               </div>
             </div>
