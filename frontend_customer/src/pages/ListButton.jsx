@@ -3,8 +3,9 @@ import styles from "./CustomerEnd.module.css";
 
 function ListButton() {
   const [state, setState] = useState("order");
+  const [orderID, setOrderID] = useState("");
   const url = "http://127.0.0.1:5000/customer/orders"; // url to fetch
-  let orderID = ""; // the ID returned by etcd
+  let message = ""; // the message returned by etcd
 
   // a fake order
   const order = {
@@ -39,7 +40,9 @@ function ListButton() {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('POST 請求成功:', data); // should save id to orderID here
+        console.log('POST 請求成功:', data);
+        message = data.message;
+        setOrderID(message.substring(23));
       })
       .catch(error => {
         console.error('發生錯誤:', error);
@@ -50,6 +53,20 @@ function ListButton() {
 
   const cancelButton = () => {
     // cancel an order
+    console.log("orderID: " + orderID);
+    let idUrl = url + "/" + orderID;
+    console.log("idUrl: " + idUrl);
+    fetch(idUrl, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('DELETE 請求成功:', data); // should save id to orderID here
+      })
+      .catch(error => {
+        console.error('發生錯誤:', error);
+      });
+
     setState("preparing");
   };
 
