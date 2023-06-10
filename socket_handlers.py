@@ -12,4 +12,4 @@ def handle_order_created(data):
 
 @socketio.on('order_details', namespace='/customer')
 def handle_order_details(data):
-    print('Order details:', data) 
+    print('Order details:', data)

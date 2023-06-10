@@ -12,7 +12,7 @@ app.register_blueprint(customer_blueprint, url_prefix='/customer')
 app.register_blueprint(restaurant_blueprint, url_prefix='/restaurant')
 
 # Initialize SocketIO
-socketio.init_app(app) 
+socketio.init_app(app)
 
 if __name__ == '__main__':
     app.run(debug=True)
