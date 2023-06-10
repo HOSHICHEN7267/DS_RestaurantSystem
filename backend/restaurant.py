@@ -1,11 +1,8 @@
-from flask import request, Blueprint, render_template, request, jsonify, abort
-from flask_socketio import SocketIO 
+from flask import Blueprint, jsonify, abort
 import etcd3
 import json
-import time
+from socket_handlers import socketio
 
-app = Flask(__name__)
-socketio = SocketIO(app)
 
 etcd_client = etcd3.client(host='localhost', port=2379)
 
@@ -40,7 +37,7 @@ def update_order(order_id):
         }
         etcd_client.put(key, order)
 
-        socketio.emit('order_update', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+        socketio.emit('order_update', {'order_id': order_id, 'order': order}, namespace='/customer')
 
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
@@ -69,7 +66,7 @@ def lookup_order(order_id):
             'order_items': order_items,
             'total_price_all_foods': total_price_all_foods
         }
-        socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/restuarant')
+        #socketio.emit('order_details', {'order_id': order_id, 'order': order}, namespace='/restuarant')
 
         return jsonify(order), 200
         # return render_template("getOrder.html", ...)
@@ -93,6 +90,59 @@ def delete_order(order_id):
             # return render_template("deleteOrder.html", ...)
         else:
             abort(400, f"Order with ID {order_id} cannot be deleted. Status: {status}")
+    else:
+        abort(404, f"Order with ID {order_id} not found")
+
+@restaurant_blueprint.route('/orders/<int:order_id>/done', methods=['POST'])
+def mark_order_done(order_id):
+    key = f"/orders/{order_id}"
+    order_data = etcd_client.get(key)
+
+    if order_data is not None and order_data[0] is not None:
+        value_json = order_data[0]
+        value = json.loads(value_json)
+        status = value.get('status')
+
+        
+        # Update the status to "done"
+        value['status'] = "done"
+        value_json = json.dumps(value)
+
+        # Store the updated order data in etcd
+        etcd_client.put(key, value_json)
+        
+        # Emit a socket event to inform the frontend about the status change
+        socketio.emit('order_details', {'order_id': order_id, 'status': 'done'}, namespace='/customer')
+
+        return jsonify({'message': f"Order with ID {order_id} marked as done"}), 200
+
+    else:
+        abort(404, f"Order with ID {order_id} not found")
+
+@restaurant_blueprint.route('/orders/<int:order_id>/making', methods=['POST'])
+def mark_order_making(order_id):
+    key = f"/orders/{order_id}"
+    order_data = etcd_client.get(key)
+
+    if order_data is not None and order_data[0] is not None:
+        value_json = order_data[0]
+        value = json.loads(value_json)
+        status = value.get('status')
+
+        if status == "pending":
+            # Update the status to "making"
+            value['status'] = "making"
+            value_json = json.dumps(value)
+
+            # Store the updated order data in etcd
+            etcd_client.put(key, value_json)
+
+            # Emit a socket event to inform the frontend about the status change
+            socketio.emit('order_details', {'order_id': order_id, 'status': 'making'}, namespace='/customer')
+
+            return jsonify({'message': f"Order with ID {order_id} marked as making"}), 200
+        else:
+            abort(400, f"Order with ID {order_id} cannot be marked as making. Status: {status}")
     else:
         abort(404, f"Order with ID {order_id} not found")
 
