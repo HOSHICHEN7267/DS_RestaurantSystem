@@ -32,6 +32,7 @@ function ListButton(props) {
   });
 
   const orderButton = () => {
+    order.foods = order.foods.filter(food => food.quantity !== 0); // if food quantity == 0 then delete
     console.log("order: " + JSON.stringify(order));
     // create an order
     fetch(url, {
