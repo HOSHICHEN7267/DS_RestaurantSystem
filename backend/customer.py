@@ -49,9 +49,11 @@ def create_order():
             order_items[food_name] = {
                 'price': food_price,
                 'quantity': food_quantity,
+                'total_price': food_price * food_quantity
             }
         else:
             order_items[food_name]['quantity'] += food_quantity
+            order_items[food_name]['total_price'] += food_price * food_quantity
 
     value = {
         'table_number': table_number,
