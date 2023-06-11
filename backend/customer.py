@@ -14,7 +14,8 @@ def generate_order_id():
     count = count + 1
     return order_id
 
-etcd_client = etcd3.client(host='192.168.56.201', port=2379)
+#etcd_client = etcd3.client(host='192.168.56.201', port=2379)
+etcd_client = etcd3.client(host='localhost:5000', port=2379)
 
 customer_blueprint = Blueprint('customer', __name__, template_folder='templates')
 
