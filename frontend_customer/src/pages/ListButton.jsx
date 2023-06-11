@@ -1,35 +1,38 @@
 import React, { useState } from 'react';
 import styles from "./CustomerEnd.module.css";
+import io from 'socket.io-client';
 
-function ListButton() {
+function ListButton(props) {
   const [state, setState] = useState("order");
   const [orderID, setOrderID] = useState("");
+  //const [text, setText] = useState("");
   const url = "http://127.0.0.1:5000/customer/orders"; // url to fetch
+  const socket = io('http://127.0.0.1:5000/customer');
+
   let message = ""; // the message returned by etcd
 
-  // a fake order
+  const dishes = props.dishes;
+
   const order = {
     table_number: 5,
-    foods: [
-      {
-        name: "karaagedon",
-        price: 120,
-        quantity: 2
-      },
-      {
-        name: "porkdon",
-        price: 160,
-        quantity: 1
-      },
-      {
-        name: "katsudon",
-        price: 130,
-        quantity: 3
-      },
-    ]
+    foods: dishes
   };
 
+  socket.on('order_details', function(data) {
+    //console.log("Order details: " + JSON.stringify(data));
+    console.log("data: " + JSON.stringify(data));
+    if(data.order_id == orderID){
+      if(data.status == "making"){
+        setState("preparing");
+      }
+      else if(data.status == "done"){
+        setState("order");
+      }
+    }
+  });
+
   const orderButton = () => {
+    console.log("order: " + JSON.stringify(order));
     // create an order
     fetch(url, {
       method: 'POST',
@@ -67,12 +70,12 @@ function ListButton() {
         console.error('發生錯誤:', error);
       });
 
-    setState("preparing");
+    setState("order");
   };
 
   const preparingButton = () => {
     // wait for signal from etcd to call this function
-    setState("order");
+    console.log("Preparing");
   };
 
   switch (state) {

@@ -1,77 +1,143 @@
 import { useState, useEffect } from "react";
 import styles from "./RestaurantEnd.module.css";
-import { order_table } from "./data.js";
+
+var order_table = [];
+var max_ordernum = 1;
+var pre_max_ordernum = max_ordernum + 1;
 
 const RestaurantEnd = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState(order_table);
-  let message = ""; // the message returned by etcd
-
 
   const openOrderDetail = (orderNum) => {
     const order = orders.find((order) => order.order_num === orderNum);
     setSelectedOrder(order);
   };
 
-  // const closeOrderDetail = () => {
-  //   setSelectedOrder(null);
-  // };
+  const closeOrderDetail = () => {
+    setSelectedOrder(null);
+  };
 
   const acbutton = (order) => {
-    order.order_state = "making";
+    order.status = "making";
     updateOrderState(order.order_num, "making");
   };
 
   const fnbutton = (order) => {
-    order.order_state = "done";
-    updateOrderState(order.order_num, "done"); // Update order_table
+    order.status = "done";
     setOrders(orders.filter((ord) => ord.order_num !== order.order_num)); // Remove the completed order from orders state
     setSelectedOrder(null); // Reset selectedOrder state
+  
     const url = `http://127.0.0.1:5000/restaurant/orders/${order.order_num}/done`;
+    const durl = `http://127.0.0.1:5000/restaurant/orders/${order.order_num}`;
+  
     fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ order_id: order.order_num }) // Pass the order ID in the request body
     })
-    const durl = `http://127.0.0.1:5000/restaurant/d_orders/${order.order_num}`;
-    fetch(durl, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ order_id: order.order_num }) // Pass the order ID in the request body
-    })
+      .then(() => {
+        return fetch(durl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+      })
+      .then(() => {
+        console.log(order_table);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+  
 
   const updateOrderState = (orderNum, newState) => {
     const updatedOrders = orders.map((order) => {
       if (order.order_num === orderNum) {
-        return { ...order, order_state: newState };
+        return { ...order, status: newState };
       }
       return order;
     });
     setOrders(updatedOrders);
-    const url = `http://127.0.0.1:5000/restaurant/orders/${orderNum}/making`;
+    const url = `http://127.0.0.1:5000/restaurant/orders/${orderNum}/${newState}`;
     fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ order_id: orderNum }) // Pass the order ID in the request body
     })
   };
 
   useEffect(() => {
-    setOrders(order_table);
-  }, [order_table]);
+    var isFetching = false; // 追蹤請求是否正在進行中
+
+    var fetchOrderData = () => {
+      if (isFetching) {
+        return; // 如果已經有請求正在進行中，則不執行新的請求
+      }
+
+      isFetching = true; // 設置請求狀態為進行中
+
+      var url = `http://127.0.0.1:5000/restaurant/orders/${max_ordernum}`;
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.status);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          max_ordernum = max_ordernum + 1;
+          transformOrderData(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          isFetching = false; // 請求完成後重置請求狀態
+        });
+    }
+    
+    const transformOrderData = (fetchedData) => {
+      var table = [];
+      for (var itemName in fetchedData.order_items) {
+        var item = fetchedData.order_items[itemName];
+        var newItem = {
+          name: itemName,
+          quantity: "x" + item.quantity,
+          price: "NT " + item.total_price,
+        };
+        table.push(newItem);
+      }
+  
+      const newOrder = {
+        order_num: fetchedData.order_id,
+        total_price_all_foods: fetchedData.total_price_all_foods,
+        status: fetchedData.status,
+        table: table,
+      };
+  
+      setOrders((prevOrders) => [...prevOrders, newOrder]);
+
+    };
+
+    const intervalId = setInterval(fetchOrderData, 5000);
+    
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <div className={styles.restaurantEnd}>
       <div className={styles.topBar}>
         <img className={styles.yuandonli1Icon} alt="" src="/yuandonli-1@2x.png" />
       </div>
+
       <div className={styles.left}>
         {orders.map((order) => (
           <div
@@ -80,8 +146,8 @@ const RestaurantEnd = () => {
             key={order.order_num}
           >
             <div className={styles.no}>訂單編號 {order.order_num}</div>
-            <div className={styles.nt}>NT. {order.total}</div>
-            {order.order_state === "making" && (
+            <div className={styles.nt}>NT. {order.total_price_all_foods}</div>
+            {order.status === "making" && (
               <img className={styles.checkIcon} alt="" src="/check.svg" />
             )}
           </div>
@@ -90,21 +156,21 @@ const RestaurantEnd = () => {
 
       <div className={styles.right}>
         {selectedOrder && (
-          <div className={styles.orderDetail}>
+          <div className={styles.orderDetail}>  
             <div className={styles.content}>
               <div className={styles.orderNo}>訂單編號 {selectedOrder.order_num}</div>
               <div className={styles.detail}>
                 {selectedOrder.table.map((item, index) => (
                   <div className={styles.item} key={index}>
                     <div className={styles.name}>{item.name}</div>
-                    <div className={styles.amount}>{item.amount}</div>
+                    <div className={styles.amount}>{item.quantity}</div>
                     <div className={styles.price}>{item.price}</div>
                   </div>
                 ))}
               </div>
-              <div className={styles.total}>合計： {selectedOrder.total}</div>
+              <div className={styles.total}>合計： {selectedOrder.total_price_all_foods}</div>
             </div>
-            {selectedOrder.order_state === "pending" ? (
+            {selectedOrder.status === "pending" ? (
               <button className={styles.acButton} onClick={() => acbutton(selectedOrder)}>
                 <div className={styles.buttonText}>接受訂單</div>
               </button>
@@ -121,3 +187,5 @@ const RestaurantEnd = () => {
 };
 
 export default RestaurantEnd;
+
+
