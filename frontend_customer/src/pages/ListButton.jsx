@@ -42,6 +42,7 @@ function ListButton(props) {
             setState("order");
           }
         } catch (error) {
+          setState("order");
           console.error("發生錯誤:", error);
         }
       };
