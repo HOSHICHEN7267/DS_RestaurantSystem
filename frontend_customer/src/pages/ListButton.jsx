@@ -27,10 +27,10 @@ function ListButton(props) {
       }
       else if(data.status == "done"){
         setState("order");
-        for(let food in order.foods){
+        order.foods.forEach(food => {
           food.quantity = 0;
           food.price = 0;
-        }
+        });
       }
     }
   });

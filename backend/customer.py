@@ -15,6 +15,7 @@ def generate_order_id():
     return order_id
 
 etcd_client = etcd3.client(host='192.168.56.201', port=2379)
+#etcd_client = etcd3.client(host='localhost:5000', port=2379)
 
 customer_blueprint = Blueprint('customer', __name__, template_folder='templates')
 
@@ -48,11 +49,9 @@ def create_order():
             order_items[food_name] = {
                 'price': food_price,
                 'quantity': food_quantity,
-                'total_price': food_price * food_quantity
             }
         else:
             order_items[food_name]['quantity'] += food_quantity
-            order_items[food_name]['total_price'] += food_price * food_quantity
 
     value = {
         'table_number': table_number,
