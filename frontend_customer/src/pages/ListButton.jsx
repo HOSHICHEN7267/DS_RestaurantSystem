@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styles from "./CustomerEnd.module.css";
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
 function ListButton(props) {
   const [state, setState] = useState("order");
   const [orderID, setOrderID] = useState("");
   //const [text, setText] = useState("");
   const url = "http://127.0.0.1:5000/customer/orders"; // url to fetch
-  const socket = io('http://127.0.0.1:5000/customer');
+  // const socket = io('http://127.0.0.1:5000/customer');
 
   let message = ""; // the message returned by etcd
 
@@ -18,22 +18,59 @@ function ListButton(props) {
     foods: dishes
   };
 
-  socket.on('order_details', function(data) {
-    //console.log("Order details: " + JSON.stringify(data));
-    console.log("data: " + JSON.stringify(data));
-    if(data.order_id == orderID){
-      if(data.status == "making"){
-        setState("preparing");
-      }
-      else if(data.status == "done"){
-        setState("order");
-        order.foods.forEach(food => {
-          food.quantity = 0;
-          food.total_price = 0;
-        });
-      }
+  // socket.on('order_details', function(data) {
+  //   //console.log("Order details: " + JSON.stringify(data));
+  //   console.log("data: " + JSON.stringify(data));
+  //   if(data.order_id == orderID){
+  //     if(data.status == "making"){
+  //       setState("preparing");
+  //     }
+  //     else if(data.status == "done"){
+  //       setState("order");
+  //       order.foods.forEach(food => {
+  //         food.quantity = 0;
+  //         food.total_price = 0;
+  //       });
+  //     }
+  //   }
+  // });
+
+  useEffect(() => {
+    let intervalId;
+
+    if (state === "cancel" || state === "preparing") {
+      // 定義執行GET請求的函數
+      let idUrl = url + orderID;
+      const fetchData = async () => {
+        try {
+          const response = await fetch(idUrl);
+          const data = await response.json();
+          // 在這裡處理回傳的資料
+          console.log(data);
+          if(data.status == "making" && state != "preparing"){
+            setState("preparing");
+          }
+          else if(data.status == "done" && state != "order"){
+            order.foods.forEach(food => {
+              food.quantity = 0;
+              food.total_price = 0;
+            });
+            setState("order");
+          }
+        } catch (error) {
+          console.error("發生錯誤:", error);
+        }
+      };
+
+      // 設定定時器，每隔五秒執行一次GET請求
+      intervalId = setInterval(fetchData, 5000);
     }
-  });
+
+    // 組件卸載時清除定時器
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [state]);
 
   const orderButton = () => {
     order.foods = order.foods.filter(food => food.quantity !== 0); // if food quantity == 0 then delete
