@@ -18,31 +18,15 @@ function ListButton(props) {
     foods: dishes
   };
 
-  // socket.on('order_details', function(data) {
-  //   //console.log("Order details: " + JSON.stringify(data));
-  //   console.log("data: " + JSON.stringify(data));
-  //   if(data.order_id == orderID){
-  //     if(data.status == "making"){
-  //       setState("preparing");
-  //     }
-  //     else if(data.status == "done"){
-  //       setState("order");
-  //       order.foods.forEach(food => {
-  //         food.quantity = 0;
-  //         food.total_price = 0;
-  //       });
-  //     }
-  //   }
-  // });
-
   useEffect(() => {
     let intervalId;
-
+    const idUrl = `${url}/${orderID}`;
     if (state === "cancel" || state === "preparing") {
       // 定義執行GET請求的函數
-      let idUrl = url + orderID;
       const fetchData = async () => {
         try {
+          console.log("idUrl: " + idUrl);
+          console.log("orderID: " + orderID);
           const response = await fetch(idUrl);
           const data = await response.json();
           // 在這裡處理回傳的資料
@@ -70,7 +54,7 @@ function ListButton(props) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [state]);
+  }, [state, orderID]);
 
   const orderButton = () => {
     order.foods = order.foods.filter(food => food.quantity !== 0); // if food quantity == 0 then delete
@@ -88,6 +72,7 @@ function ListButton(props) {
         console.log('POST 請求成功:', data);
         message = data.message;
         setOrderID(message.substring(23));
+        console.log("orderID: " + orderID);
       })
       .catch(error => {
         console.error('發生錯誤:', error);
