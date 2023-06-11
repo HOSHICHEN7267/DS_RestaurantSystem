@@ -27,6 +27,10 @@ function ListButton(props) {
       }
       else if(data.status == "done"){
         setState("order");
+        for(food in order.foods){
+          food.quantity = 0;
+          food.price = 0;
+        }
       }
     }
   });
