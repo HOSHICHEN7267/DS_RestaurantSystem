@@ -29,7 +29,7 @@ function ListButton(props) {
         setState("order");
         order.foods.forEach(food => {
           food.quantity = 0;
-          food.price = 0;
+          food.total_price = 0;
         });
       }
     }
