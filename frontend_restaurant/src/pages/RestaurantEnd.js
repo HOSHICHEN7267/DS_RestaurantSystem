@@ -3,7 +3,6 @@ import styles from "./RestaurantEnd.module.css";
 
 var order_table = [];
 var max_ordernum = 1;
-var pre_max_ordernum = max_ordernum + 1;
 
 const RestaurantEnd = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -38,6 +37,10 @@ const RestaurantEnd = () => {
       },
     })
       .then(() => {
+        // // delay for 10 sec, or to get the order.status === "done"
+        // setTimeout(() => {
+        //   console.log("delete after 10 seconds")
+        // }, 10000);
         return fetch(durl, {
           method: 'DELETE',
           headers: {
@@ -188,4 +191,10 @@ const RestaurantEnd = () => {
 
 export default RestaurantEnd;
 
-
+// // for order_table to delete an order
+// var deleteOrder = (order) => {
+//     var index = order_table.indexOf(order); // Find the index of the element
+//     if (index > -1) {
+//         order_table.splice(index, 1); // Remove the element using splice
+//     }
+// };

@@ -28,6 +28,17 @@ function ListButton(props) {
           console.log("idUrl: " + idUrl);
           console.log("orderID: " + orderID);
           const response = await fetch(idUrl);
+          // // if response is 404, Not Found. setState("order");
+          // if (response.status === 404) {
+          //   // Handle "404 Not Found" error
+          //   console.log("Error: 404 Not Found");
+          //   // Additional actions or error handling can be done here
+          // } 
+          // else {
+          //   const data = await response.json();
+          //   // Continue with further processing of the data
+          //   // Additional actions can be performed here
+          // }
           const data = await response.json();
           // 在這裡處理回傳的資料
           console.log(data);

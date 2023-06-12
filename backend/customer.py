@@ -44,16 +44,17 @@ def create_order():
         food_name = food.get('name')
         food_price = food.get('price')
         food_quantity = food.get('quantity')
+        food_total_price = food.get("total_price")
 
         if food_name not in order_items:
             order_items[food_name] = {
                 'price': food_price,
                 'quantity': food_quantity,
-                'total_price': food_price * food_quantity
+                'total_price': food_total_price
             }
         else:
-            order_items[food_name]['quantity'] += food_quantity
-            order_items[food_name]['total_price'] += food_price * food_quantity
+            order_items[food_name]['quantity'] = food_quantity
+            order_items[food_name]['total_price'] = food_total_price
 
     value = {
         'table_number': table_number,
