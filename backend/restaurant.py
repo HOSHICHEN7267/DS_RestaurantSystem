@@ -16,7 +16,30 @@ def route():
 def lookup_order(order_id):
     key = f"/orders/{order_id}"
     order_data = etcd_client.get(key)
+    # order_datas = etcd_client.get_all()
+    # orders = []
+    # for data in order_datas:
+        #if data is not None and data[0] is not None:
+            # value_json = order_data[0]
+            # value = json.loads(value_json)
+            # order_items = value.get('order_items')
+            # status = value.get('status')
 
+            # # Calculate the total price of the order 
+            # total_price_all_foods = sum(item['total_price'] for item in order_items.values())
+
+            # order = {
+            #     'order_id': order_id,
+            #     'table_number': value.get('table_number'),
+            #     'status': status,
+            #     'order_items': order_items,
+            #     'total_price_all_foods': total_price_all_foods
+            # }
+            # orders.append(order)
+            # # Emit a socket event to send the initial order details to the frontend
+            # socketio.emit('order_details', {'order': order}, namespace='/restaurant')
+
+            # return jsonify(order), 200
     if order_data is not None and order_data[0] is not None:
         value_json = order_data[0]
         value = json.loads(value_json)
