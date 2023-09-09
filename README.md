@@ -1,4 +1,4 @@
-# Restaurant System ETCD
+# Restaurant Ordering System
 
 ## System description
 Using **ETCD** as the backend database, and **React** and **Flask** for the front-end and back-end respectively, implement a complete online ordering system.  
@@ -24,3 +24,8 @@ The kitchen “Receiving Page” will get the order information from the databas
 
 ## Sequence Diagram
 ![image](https://github.com/HOSHICHEN7267/DS_RestaurantSystem/blob/master/image/Sequence%20Diagram.png)
+
+## Links
+[Demo video](https://youtu.be/513C4WNDiVs)  
+[Presentation PowerPoint](https://github.com/HOSHICHEN7267/DS_RestaurantSystem/blob/master/Introduction%20of%20Restaurant%20System.pdf)
+
